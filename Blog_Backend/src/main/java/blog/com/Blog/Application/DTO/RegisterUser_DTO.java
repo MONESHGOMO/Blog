@@ -1,6 +1,5 @@
 package blog.com.Blog.Application.DTO;
 
-import blog.com.Blog.Application.model.Role;
 
 public class RegisterUser_DTO {
 
