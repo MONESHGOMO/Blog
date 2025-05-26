@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y curl \
     && ln -s /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn
 
 WORKDIR /app
-COPY . .
+COPY Blog_Backend/. .
 
 RUN mvn clean package -DskipTests
 
