@@ -1,20 +1,21 @@
-# Use Maven with JDK 23 to build the app
-FROM maven:3.9.0-eclipse-temurin-23 AS build
+# ---- Build Stage ----
+    FROM eclipse-temurin:23-jdk AS build
 
-# Copy your project files
-COPY . .
-
-# Build the Spring Boot jar, skipping tests for faster build
-RUN mvn clean package -DskipTests
-
-# Use JDK 23 runtime image to run the app
-FROM eclipse-temurin:23-jre-alpine
-
-# Copy the built jar from the build stage
-COPY --from=build /target/*.jar app.jar
-
-# Expose port 8080 (default Spring Boot port)
-EXPOSE 8080
-
-# Run the jar file
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+    # Install Maven
+    ARG MAVEN_VERSION=3.9.6
+    RUN apt-get update && apt-get install -y curl \
+        && curl -fsSL https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz | tar xz -C /opt \
+        && ln -s /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn
+    
+    WORKDIR /app
+    COPY Blog_Backend/. .
+    
+    RUN mvn clean package -DskipTests
+    
+    # ---- Runtime Stage ----
+    FROM eclipse-temurin:23-jre-alpine
+    WORKDIR /app
+    COPY --from=build /app/target/*.jar app.jar
+    
+    EXPOSE 8080
+    ENTRYPOINT ["java", "-jar", "app.jar"]
