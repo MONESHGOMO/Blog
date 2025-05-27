@@ -50,7 +50,7 @@ public class HomeController {
                 </head>
                 <body>
                     <div class="container">
-                        <h1>🚀 Welcome Gomo  Developer!</h1>
+                        <h1>🚀 Welcome Gomo  Dev!</h1>
                         <p>Our Spring Boot backend is running .</p>
                         <p>Happy coding! 💻🔥</p>
                     </div>

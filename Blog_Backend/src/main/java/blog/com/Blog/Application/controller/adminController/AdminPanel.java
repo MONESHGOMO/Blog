@@ -84,7 +84,7 @@ public class AdminPanel {
     @PutMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
     public ResponseEntity<String> updateBlogToDB(
             @PathVariable Long id,
-            @RequestPart("blogUpdateFromAdmin") Blog blogUpdateFromAdmin,
+            @RequestPart(  value = "blogUpdateFromAdmin") Blog blogUpdateFromAdmin,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
 
         logger.info("PUT /blogs/{} called - Updating blog", id);

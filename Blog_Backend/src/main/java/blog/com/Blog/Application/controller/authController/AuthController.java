@@ -1,5 +1,5 @@
 package blog.com.Blog.Application.controller.authController;
-import org.springframework.security.core.userdetails.User;
+import blog.com.Blog.Application.service.emailService.CustomMailSender;
 import blog.com.Blog.Application.DTO.JwtResponse;
 import blog.com.Blog.Application.DTO.Login_DTO;
 import blog.com.Blog.Application.DTO.RegisterUser_DTO;
@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -42,6 +43,10 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private CustomMailSender mailSender;
+
+
     @PostMapping("/register/user")
     public ResponseEntity<?> addUser(@RequestBody @Valid RegisterUser_DTO registerUserDto) {
         try {
@@ -57,6 +62,7 @@ public class AuthController {
                 Optional<BlogUser> createdUser = registrationService.findByEmail(registerUserDto.getEmail());
                 if (createdUser.isPresent()) {
                     logger.info("User registered successfully: {}", createdUser.get().getEmail());
+                    mailSender.sendUserSignUpNotification(registerUserDto.getEmail());
                     return ResponseEntity
                             .status(HttpStatus.CREATED)
                             .body(createdUser.get());
@@ -107,7 +113,7 @@ public class AuthController {
 
         } catch (BadCredentialsException e) {
             logger.warn("Invalid login attempt for email: {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials"));
         } catch (Exception e) {
             logger.error("Unexpected error during login for email {}: {}", request.getEmail(), e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
