@@ -2,10 +2,13 @@ package blog.com.Blog.Application.controller.userController;
 
 import blog.com.Blog.Application.model.Blog;
 import blog.com.Blog.Application.service.userService.BlogsData;
+import jdk.jfr.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,4 +60,20 @@ public class UserController {
             return new ResponseEntity<>("Something went wrong while fetching the blog.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @GetMapping("/blogImage/{id}")
+    public ResponseEntity<byte[]>  getBlogImageById(@PathVariable Long id){
+
+        Optional<Blog> blog = blogsData.getAllBlogByIdFromDB(id);
+        byte[] imageFile = blog.get().getImageData();
+
+        return  ResponseEntity.ok()
+                .contentType(MediaType.valueOf(blog.get().getImageType()))
+                .body(imageFile);
+
+    }
+
+
+
 }
