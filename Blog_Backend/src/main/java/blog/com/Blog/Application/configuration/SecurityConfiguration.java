@@ -77,48 +77,25 @@ public class SecurityConfiguration {
     }
 
 
+
     @Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/","http://127.0.0.1:5500"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
 
-    // General config for your blog editor
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/", "http://127.0.0.1:5501"));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    config.setAllowedHeaders(List.of("*"));
-    config.setAllowCredentials(true);
-    source.registerCorsConfiguration("/**", config); // or /api/** if you use specific path prefix
-
-    // Restrict users to GET-only on /public/** routes
-    CorsConfiguration user = new CorsConfiguration();
-    user.setAllowedOrigins(List.of("https://moneshgomo.netlify.app/"));
-    user.setAllowedMethods(List.of("GET"));  // Only GET allowed
-    user.setAllowedHeaders(List.of("*"));
-    user.setAllowCredentials(true);
-    source.registerCorsConfiguration("/public/**", user);
-
-    return source;
-}
-
-
-    // @Bean
-    // public CorsConfigurationSource corsConfigurationSource() {
-    //     CorsConfiguration config = new CorsConfiguration();
-    //     config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/","http://127.0.0.1:5501"));
-    //     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    //     config.setAllowedHeaders(List.of("*"));
-    //     config.setAllowCredentials(true);
-
-    //         CorsConfiguration user = new CorsConfiguration();
-    //         user.setAllowedOrigins(List.of("https://moneshgomo.netlify.app/"));
-    //         user.setAllowedMethods(List.of("GET"));  // Only GET allowed
-    //         user.setAllowedHeaders(List.of("*"));
-    //         user.setAllowCredentials(true);
-    //         source.registerCorsConfiguration("/**", user);
+            CorsConfiguration user = new CorsConfiguration();
+            user.setAllowedOrigins(List.of("https://moneshgomo.netlify.app/"));
+            user.setAllowedMethods(List.of("GET"));  // Only GET allowed
+            user.setAllowedHeaders(List.of("*"));
+            user.setAllowCredentials(true);
+            source.registerCorsConfiguration("/**", user);
         
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", config);
-    //     return source;
-    // }
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
 }
