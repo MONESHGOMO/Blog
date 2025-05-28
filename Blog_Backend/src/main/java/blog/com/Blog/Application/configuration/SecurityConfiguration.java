@@ -90,7 +90,7 @@ public CorsConfigurationSource corsConfigurationSource() {
     source.registerCorsConfiguration("/**", config); // default rule
 
     CorsConfiguration user = new CorsConfiguration();
-    user.setAllowedOrigins(List.of("https://gomo-blog.web.app/"));
+    user.setAllowedOrigins(List.of("https://gomo-blog.web.app"));
     user.setAllowedMethods(List.of("GET"));
     user.setAllowedHeaders(List.of("*"));
     user.setAllowCredentials(true);
