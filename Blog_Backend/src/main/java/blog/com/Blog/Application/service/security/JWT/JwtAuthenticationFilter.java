@@ -1,7 +1,7 @@
-package blog.com.Blog.Application.service.sercurity.JWT;
+package blog.com.Blog.Application.service.security.JWT;
 
 
-import blog.com.Blog.Application.service.sercurity.MyUserDetailService;
+import blog.com.Blog.Application.service.userService.MyUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

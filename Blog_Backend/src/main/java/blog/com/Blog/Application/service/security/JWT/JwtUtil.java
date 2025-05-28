@@ -1,4 +1,4 @@
-package blog.com.Blog.Application.service.sercurity.JWT;
+package blog.com.Blog.Application.service.security.JWT;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

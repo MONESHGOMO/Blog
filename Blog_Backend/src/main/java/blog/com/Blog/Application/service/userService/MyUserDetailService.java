@@ -1,4 +1,5 @@
-package blog.com.Blog.Application.service.sercurity;
+package blog.com.Blog.Application.service.userService;
+
 
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.repository.UserRepository;
@@ -8,11 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.Spliterators;
-
 @Service
 public class MyUserDetailService implements UserDetailsService {
 
