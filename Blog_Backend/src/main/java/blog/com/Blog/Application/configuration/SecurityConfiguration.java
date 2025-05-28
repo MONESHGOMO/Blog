@@ -89,9 +89,8 @@ public class SecurityConfiguration {
         adminConfig.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", adminConfig); // default rule for all paths except overridden below
 
-        // User frontend origin with only GET allowed
         CorsConfiguration userConfig = new CorsConfiguration();
-        userConfig.setAllowedOrigins(List.of("https://gomo-blog.web.app"));
+        userConfig.setAllowedOrigins(List.of("https://gomo-blog.netlify.app/user"));
         userConfig.setAllowedMethods(List.of("GET", "OPTIONS"));
         userConfig.setAllowedHeaders(List.of("*"));
         userConfig.setAllowCredentials(true);
