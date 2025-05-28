@@ -92,7 +92,7 @@ public class SecurityConfiguration {
         // User frontend origin with only GET allowed
         CorsConfiguration userConfig = new CorsConfiguration();
         userConfig.setAllowedOrigins(List.of("https://gomo-blog.web.app"));
-        userConfig.setAllowedMethods(List.of("GET"));
+        userConfig.setAllowedMethods(List.of("GET", "OPTIONS"));
         userConfig.setAllowedHeaders(List.of("*"));
         userConfig.setAllowCredentials(true);
         source.registerCorsConfiguration("/users/**", userConfig); // specific rule for user endpoints
