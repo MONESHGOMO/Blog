@@ -78,24 +78,26 @@ public class SecurityConfiguration {
 
 
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/","http://127.0.0.1:5500"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+   @Bean
+public CorsConfigurationSource corsConfigurationSource() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-            CorsConfiguration user = new CorsConfiguration();
-            user.setAllowedOrigins(List.of("https://moneshgomo.netlify.app/"));
-            user.setAllowedMethods(List.of("GET"));  // Only GET allowed
-            user.setAllowedHeaders(List.of("*"));
-            user.setAllowCredentials(true);
-            source.registerCorsConfiguration("/**", user);
-        
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/", "http://127.0.0.1:5500"));
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true);
+    source.registerCorsConfiguration("/**", config); // default rule
+
+    CorsConfiguration user = new CorsConfiguration();
+    user.setAllowedOrigins(List.of("https://moneshgomo.netlify.app/"));
+    user.setAllowedMethods(List.of("GET"));
+    user.setAllowedHeaders(List.of("*"));
+    user.setAllowCredentials(true);
+    source.registerCorsConfiguration("/user/**", user); // specific rule
+
+    return source;
+}
+
 
 }
