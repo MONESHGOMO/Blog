@@ -34,24 +34,23 @@ public class SecurityConfiguration {
     @Autowired
     private JwtAuthenticationFilter jwtFilter;
 
+    // ✅ Security filter chain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/home","/auth/**","/users/**").permitAll();
+                    registry.requestMatchers("/home", "/auth/**", "/users/**").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
-                    registry.anyRequest().authenticated();
-
+                    registry.anyRequest().authenticated(); 
                 })
-                .authenticationProvider(authenticationProvider()) // ✅ ADD THIS LINE
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-
-
+    // ✅ DAO-based authentication
     @Bean
     public UserDetailsService userDetailsService() {
         return userDetailService;
@@ -70,34 +69,31 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    // ✅ Authentication manager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-
-
- @Bean
+    // ✅ CORS setup for user and admin panels
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        // Admin panel origin with full method support
         CorsConfiguration adminConfig = new CorsConfiguration();
-        adminConfig.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app"));
+        adminConfig.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app")); // admin panel
         adminConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         adminConfig.setAllowedHeaders(List.of("*"));
         adminConfig.setAllowCredentials(true);
-        source.registerCorsConfiguration("/**", adminConfig); // default rule for all paths except overridden below
+        source.registerCorsConfiguration("/**", adminConfig);
 
         CorsConfiguration userConfig = new CorsConfiguration();
-        userConfig.setAllowedOrigins(List.of("https://gomo-blog.netlify.app/user"));
+        userConfig.setAllowedOrigins(List.of("https://gomo-blog.netlify.app")); // user panel
         userConfig.setAllowedMethods(List.of("GET", "OPTIONS"));
         userConfig.setAllowedHeaders(List.of("*"));
         userConfig.setAllowCredentials(true);
-        source.registerCorsConfiguration("/users/**", userConfig); // specific rule for user endpoints
+        source.registerCorsConfiguration("/**", userConfig);
 
         return source;
     }
-
-
 }
