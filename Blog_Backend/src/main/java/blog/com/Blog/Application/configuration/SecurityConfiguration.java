@@ -42,7 +42,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/home","/auth/**","/users/**").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
-                    registry.requestMatchers("/users/**").hasAnyRole("USER", "ADMIN");
                     registry.anyRequest().authenticated();
 
                 })
@@ -78,26 +77,28 @@ public class SecurityConfiguration {
 
 
 
-   @Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+ @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/"));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    config.setAllowedHeaders(List.of("*"));
-    config.setAllowCredentials(true);
-    source.registerCorsConfiguration("/**", config); // default rule
+        // Admin panel origin with full method support
+        CorsConfiguration adminConfig = new CorsConfiguration();
+        adminConfig.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app"));
+        adminConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        adminConfig.setAllowedHeaders(List.of("*"));
+        adminConfig.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", adminConfig); // default rule for all paths except overridden below
 
-    CorsConfiguration user = new CorsConfiguration();
-    user.setAllowedOrigins(List.of("https://gomo-blog.web.app"));
-    user.setAllowedMethods(List.of("GET"));
-    user.setAllowedHeaders(List.of("*"));
-    user.setAllowCredentials(true);
-    source.registerCorsConfiguration("/user/**", user); // specific rule
+        // User frontend origin with only GET allowed
+        CorsConfiguration userConfig = new CorsConfiguration();
+        userConfig.setAllowedOrigins(List.of("https://gomo-blog.web.app"));
+        userConfig.setAllowedMethods(List.of("GET"));
+        userConfig.setAllowedHeaders(List.of("*"));
+        userConfig.setAllowCredentials(true);
+        source.registerCorsConfiguration("/users/**", userConfig); // specific rule for user endpoints
 
-    return source;
-}
+        return source;
+    }
 
 
 }
