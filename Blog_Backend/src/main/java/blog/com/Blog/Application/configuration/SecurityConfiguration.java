@@ -83,14 +83,14 @@ public CorsConfigurationSource corsConfigurationSource() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/", "http://127.0.0.1:5500"));
+    config.setAllowedOrigins(List.of("https://gomodevblogs.netlify.app/"));
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
     source.registerCorsConfiguration("/**", config); // default rule
 
     CorsConfiguration user = new CorsConfiguration();
-    user.setAllowedOrigins(List.of("https://moneshgomo.netlify.app/"));
+    user.setAllowedOrigins(List.of("https://gomo-blog.web.app/"));
     user.setAllowedMethods(List.of("GET"));
     user.setAllowedHeaders(List.of("*"));
     user.setAllowCredentials(true);
