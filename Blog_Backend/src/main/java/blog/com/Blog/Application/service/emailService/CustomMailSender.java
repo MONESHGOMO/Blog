@@ -34,7 +34,7 @@ public class CustomMailSender {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(to);
-            message.setSubject("Welcome to [Your Blog Name]!");
+            message.setSubject("Welcome to Gomo Blogs!");
             message.setText(buildEmailBody());
 
             mailSender.send(message);
@@ -52,7 +52,7 @@ public class CustomMailSender {
 
             You can now explore trending posts, share your ideas, and engage with other readers.
 
-            👉 Start exploring: https://gomo-blog.com
+            👉 Start exploring: https://gomo-blog.com (SOON)
 
             If you didn’t sign up for this account, please disregard this email.
 
