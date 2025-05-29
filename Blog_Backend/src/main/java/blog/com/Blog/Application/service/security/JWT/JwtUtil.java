@@ -12,7 +12,14 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
+<<<<<<< HEAD:Blog_Backend/src/main/java/blog/com/Blog/Application/service/security/JWT/JwtUtil.java
     private String secret="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+=======
+    public JwtUtil(){}
+
+    @Value("${app.jwt.secret}")
+    private String secret;
+>>>>>>> 682e894889be475044f1820f30d090b9e3dd753a:Blog_Backend/src/main/java/blog/com/Blog/Application/service/sercurity/JWT/JwtUtil.java
 
     private long jwtExpirationInMs= 86400000;
 

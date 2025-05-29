@@ -68,6 +68,8 @@ public class AdminService {
 
     public Blog saveBlog(Blog addBlogFromAdmin) {
         try {
+
+            System.out.println(addBlogFromAdmin.getImageData().toString());
             return blogRepository.save(addBlogFromAdmin);
         } catch (Exception e) {
             logger.error("Error while saving blog: {}", e.getMessage(), e);
