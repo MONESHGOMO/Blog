@@ -1,6 +1,5 @@
 package blog.com.Blog.Application.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 

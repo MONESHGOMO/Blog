@@ -4,7 +4,7 @@ import blog.com.Blog.Application.DTO.JwtResponse;
 import blog.com.Blog.Application.DTO.Login_DTO;
 import blog.com.Blog.Application.DTO.RegisterUser_DTO;
 import blog.com.Blog.Application.model.BlogUser;
-import blog.com.Blog.Application.service.sercurity.JWT.JwtUtil;
+import blog.com.Blog.Application.service.security.JWT.JwtUtil;
 import blog.com.Blog.Application.service.userService.RegistrationService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

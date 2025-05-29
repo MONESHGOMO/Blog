@@ -12,11 +12,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${app.jwt.secret}")
-    private String secret;
+    private String secret="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
-    @Value("${app.jwt.expiration}")
-    private long jwtExpirationInMs;
+    private long jwtExpirationInMs= 86400000;
 
     private Key getSigningKey() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
