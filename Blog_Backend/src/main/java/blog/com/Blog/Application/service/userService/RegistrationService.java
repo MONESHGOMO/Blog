@@ -39,13 +39,6 @@ public class RegistrationService {
         try {
             BlogUser blogUser = new BlogUser();
             blogUser.setEmail(registerUserDto.getEmail());
-            System.out.println("================================================================================");
-
-            System.out.println("Before encode : " + registerUserDto.getPassword());
-            blogUser.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
-            blogUser.setUsername(registerUserDto.getUsername());
-            System.out.println("after encode : " + blogUser.getPassword());
-            System.out.println("================================================================================");
 
             Role assignedRole = assignRoleBasedOnUsername(registerUserDto.getUsername());
             blogUser.setRole(assignedRole);
