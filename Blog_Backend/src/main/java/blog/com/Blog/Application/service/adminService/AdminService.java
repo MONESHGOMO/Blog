@@ -1,7 +1,10 @@
 package blog.com.Blog.Application.service.adminService;
 
 import blog.com.Blog.Application.model.Blog;
+import blog.com.Blog.Application.model.BlogUser;
+import blog.com.Blog.Application.model.Role;
 import blog.com.Blog.Application.repository.BlogRepository;
+import blog.com.Blog.Application.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,10 @@ public class AdminService {
 
     @Autowired
     private BlogRepository blogRepository;
+
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
@@ -83,5 +90,24 @@ public class AdminService {
             return true;
         }
         return false;
+    }
+
+
+    public List<BlogUser> getAdminData() {
+
+        Role adminRole = Role.ADMIN;
+        return userRepository.getAdminDataFromDB(adminRole.name());
+	}
+
+    public boolean deleteAdminById(Long id) {
+        try {
+            if (userRepository.existsById(id)) {
+                userRepository.deleteById(id);
+                return true;  
+            }
+            return false;  
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete admin", e);
+        }
     }
 }

@@ -11,6 +11,8 @@ public class BlogUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    
+    @JsonIgnore
     private String username;
 
     private String email;
