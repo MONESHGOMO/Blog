@@ -11,7 +11,6 @@ public class BlogUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
     @JsonIgnore
     private String username;
 
@@ -33,7 +32,6 @@ public class BlogUser {
         this.password = password;
         this.role = role;
     }
-
 
     public Long getId() {
         return id;
@@ -68,7 +66,7 @@ public class BlogUser {
     }
 
     public String getRole() {
-        return  role.name();
+        return role.name();
     }
 
     public void setRole(Role role) {

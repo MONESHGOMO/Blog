@@ -43,7 +43,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/blogs/{id}")  // http://localhost:8080/user/blogs/{id}
+    @GetMapping("/blogs/{id}") // http://localhost:8080/user/blogs/{id}
     public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
         try {
             logger.info("Fetching blog with ID: {}", id);
@@ -57,23 +57,21 @@ public class UserController {
             }
         } catch (Exception e) {
             logger.error("Error while fetching blog by ID {}: {}", id, e.getMessage(), e);
-            return new ResponseEntity<>("Something went wrong while fetching the blog.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Something went wrong while fetching the blog.",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
     @GetMapping("/blogImage/{id}")
-    public ResponseEntity<byte[]>  getBlogImageById(@PathVariable Long id){
+    public ResponseEntity<byte[]> getBlogImageById(@PathVariable Long id) {
 
         Optional<Blog> blog = blogsData.getAllBlogByIdFromDB(id);
         byte[] imageFile = blog.get().getImageData();
 
-        return  ResponseEntity.ok()
+        return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(blog.get().getImageType()))
                 .body(imageFile);
 
     }
-
-
 
 }

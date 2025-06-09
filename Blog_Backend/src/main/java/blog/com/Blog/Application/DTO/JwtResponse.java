@@ -6,12 +6,12 @@ public class JwtResponse {
     private String userName;
 
     private String role;
-    public JwtResponse(String token, String role,String userName) {
+
+    public JwtResponse(String token, String role, String userName) {
         this.token = token;
         this.role = role;
-        this.userName=userName;
+        this.userName = userName;
     }
-
 
     public String getToken() {
         return token;
@@ -29,7 +29,6 @@ public class JwtResponse {
         this.role = role;
     }
 
-
     public String getUserName() {
         return userName;
     }
@@ -38,4 +37,3 @@ public class JwtResponse {
         this.userName = userName;
     }
 }
-

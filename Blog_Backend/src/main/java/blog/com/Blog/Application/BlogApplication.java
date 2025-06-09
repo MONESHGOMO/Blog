@@ -6,8 +6,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories("blog.com.Blog.Application.repository") 
-@EntityScan("blog.com.Blog.Application.model") 
 public class BlogApplication {
 
 	public static void main(String[] args) {
@@ -17,3 +15,5 @@ public class BlogApplication {
 
 
 }
+
+

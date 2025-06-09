@@ -16,7 +16,8 @@ public class JwtUtil {
     private String secret;
 
     @Value("${app.jwt.expiration}")
-    private long jwtExpirationInMs; 
+    private long jwtExpirationInMs;
+
     private Key getSigningKey() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -60,16 +61,4 @@ public class JwtUtil {
                 .getBody()
                 .get("role");
     }
-}     
-
-
-
-
-
-
-
-
-
-
-
-
+}

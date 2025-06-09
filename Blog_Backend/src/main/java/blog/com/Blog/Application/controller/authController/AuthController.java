@@ -1,4 +1,5 @@
 package blog.com.Blog.Application.controller.authController;
+
 import blog.com.Blog.Application.service.emailService.CustomMailSender;
 import blog.com.Blog.Application.DTO.JwtResponse;
 import blog.com.Blog.Application.DTO.Login_DTO;
@@ -46,7 +47,6 @@ public class AuthController {
     @Autowired
     private CustomMailSender mailSender;
 
-
     @PostMapping("/register/user")
     public ResponseEntity<?> addUser(@RequestBody @Valid RegisterUser_DTO registerUserDto) {
         try {
@@ -67,7 +67,8 @@ public class AuthController {
                             .status(HttpStatus.CREATED)
                             .body(createdUser.get());
                 } else {
-                    logger.error("User was created but could not be retrieved for email: {}", registerUserDto.getEmail());
+                    logger.error("User was created but could not be retrieved for email: {}",
+                            registerUserDto.getEmail());
                     return ResponseEntity
                             .status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body("User created but retrieval failed");
@@ -79,22 +80,20 @@ public class AuthController {
                         .body("Failed to register user");
             }
         } catch (Exception e) {
-            logger.error("Exception during user registration for email {}: {}", registerUserDto.getEmail(), e.getMessage(), e);
+            logger.error("Exception during user registration for email {}: {}", registerUserDto.getEmail(),
+                    e.getMessage(), e);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred: " + e.getMessage());
         }
     }
 
-
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Login_DTO request) {
         try {
             logger.info("Login attempt for email: {}", request.getEmail());
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String token = jwtUtil.generateToken(request.getEmail());
@@ -106,10 +105,11 @@ public class AuthController {
 
             BlogUser user = optionalUser.get();
             String userRole = user.getRole();
-            String userName =user.getUsername();
+            String userName = user.getUsername();
 
-            logger.info("Login successful for email: {} with role: {}  with  userName  : {}", request.getEmail(), userRole,userName);
-            return ResponseEntity.ok(new JwtResponse(token, userRole,userName));
+            logger.info("Login successful for email: {} with role: {}  with  userName  : {}", request.getEmail(),
+                    userRole, userName);
+            return ResponseEntity.ok(new JwtResponse(token, userRole, userName));
 
         } catch (BadCredentialsException e) {
             logger.warn("Invalid login attempt for email: {}", request.getEmail());
@@ -120,26 +120,30 @@ public class AuthController {
         }
     }
 
-
-   /* @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login_DTO request) {
-        try {
-            logger.info("Login attempt for email: {}", request.getEmail());
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            String token = jwtUtil.generateToken(request.getEmail());
-            logger.info("Login successful for email: {}", request.getEmail());
-            return ResponseEntity.ok(new JwtResponse(token));
-        } catch (BadCredentialsException e) {
-            logger.warn("Invalid login attempt for email: {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        } catch (Exception e) {
-            logger.error("Unexpected error during login for email {}: {}", request.getEmail(), e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-        }
-    }   */
+    /*
+     * @PostMapping("/login")
+     * public ResponseEntity<?> login(@RequestBody Login_DTO request) {
+     * try {
+     * logger.info("Login attempt for email: {}", request.getEmail());
+     * Authentication authentication = authenticationManager.authenticate(
+     * new UsernamePasswordAuthenticationToken(request.getEmail(),
+     * request.getPassword())
+     * );
+     * SecurityContextHolder.getContext().setAuthentication(authentication);
+     * 
+     * String token = jwtUtil.generateToken(request.getEmail());
+     * logger.info("Login successful for email: {}", request.getEmail());
+     * return ResponseEntity.ok(new JwtResponse(token));
+     * } catch (BadCredentialsException e) {
+     * logger.warn("Invalid login attempt for email: {}", request.getEmail());
+     * return
+     * ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+     * } catch (Exception e) {
+     * logger.error("Unexpected error during login for email {}: {}",
+     * request.getEmail(), e.getMessage(), e);
+     * return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+     * body("An error occurred: " + e.getMessage());
+     * }
+     * }
+     */
 }
-

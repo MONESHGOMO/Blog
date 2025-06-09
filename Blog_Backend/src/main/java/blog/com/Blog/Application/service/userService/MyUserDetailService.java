@@ -1,6 +1,5 @@
 package blog.com.Blog.Application.service.userService;
 
-
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +9,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+
 @Service
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -34,10 +33,8 @@ public class MyUserDetailService implements UserDetailsService {
         }
     }
 
-
     private String getRoles(BlogUser blogUser) {
         return blogUser.getRole();
     }
-
 
 }

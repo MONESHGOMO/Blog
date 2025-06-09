@@ -33,9 +33,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Long> {
-    
+
     @Query(value = "SELECT * FROM blogs WHERE id = :id", nativeQuery = true)
     Blog getBlogFromDBUsingId(@Param("id") Long id);
-    
+
     // Add other custom queries if needed
 }

@@ -23,7 +23,6 @@ import blog.com.Blog.Application.model.Blog;
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.service.adminService.AdminService;
 
-
 @RestController
 
 @RequestMapping("/admin")
@@ -65,7 +64,7 @@ public class AdminPanel {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @GetMapping("/adminList")
     public ResponseEntity<List<BlogUser>> getAdminData() {
         logger.info("GET /admin/adminList - Fetching admin users");
@@ -84,11 +83,10 @@ public class AdminPanel {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-   
 
     @PostMapping("/addBlog") // http://localhost:8080/admin/addBlog
     public ResponseEntity<String> addBlogToDB(@RequestPart Blog addBlogFromAdmin,
-                                              @RequestPart MultipartFile imageFile) {
+            @RequestPart MultipartFile imageFile) {
         logger.info("POST /addBlog called - Adding new blog with title '{}'", addBlogFromAdmin.getTitle());
         try {
             addBlogFromAdmin.setImageName(imageFile.getOriginalFilename());
@@ -109,7 +107,7 @@ public class AdminPanel {
     @PutMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
     public ResponseEntity<String> updateBlogToDB(
             @PathVariable Long id,
-            @RequestPart(  value = "blogUpdateFromAdmin") Blog blogUpdateFromAdmin,
+            @RequestPart(value = "blogUpdateFromAdmin") Blog blogUpdateFromAdmin,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
 
         logger.info("PUT /blogs/{} called - Updating blog", id);
@@ -144,7 +142,7 @@ public class AdminPanel {
         }
     }
 
-    @DeleteMapping("/blogs/{id}")  // http://localhost:8080/admin/blogs/1
+    @DeleteMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
     public ResponseEntity<String> deleteBlog(@PathVariable Long id) {
         logger.info("DELETE /blogs/{} called - Deleting blog", id);
         try {
@@ -161,8 +159,7 @@ public class AdminPanel {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete blog");
         }
     }
-    
-   
+
     @DeleteMapping("/adminUser/{id}")
     public ResponseEntity<String> removeAdminAccount(@PathVariable Long id) {
         logger.info("DELETE /adminUser/{} - Attempting to delete admin account", id);
@@ -174,17 +171,13 @@ public class AdminPanel {
             } else {
                 logger.warn("No admin found with ID {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                   .body("No admin account found with ID: " + id);
+                        .body("No admin account found with ID: " + id);
             }
         } catch (Exception e) {
             logger.error("Error deleting admin with ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                               .body("Failed to delete admin account");
+                    .body("Failed to delete admin account");
         }
     }
 
-   
-    
-    
-    
 }

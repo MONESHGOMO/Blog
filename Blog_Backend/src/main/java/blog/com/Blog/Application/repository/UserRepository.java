@@ -36,7 +36,6 @@
 //
 //}
 
-
 package blog.com.Blog.Application.repository;
 
 import blog.com.Blog.Application.model.BlogUser;
@@ -49,7 +48,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
 public interface UserRepository extends JpaRepository<BlogUser, Long> {
 
@@ -60,7 +58,7 @@ public interface UserRepository extends JpaRepository<BlogUser, Long> {
 
     @Query(value = "SELECT role FROM blog_users WHERE id = :id", nativeQuery = true)
     String[] getUserRoleById(@Param("id") Long id);
-    
+
     @Query(value = "SELECT * FROM blog_users WHERE role = :roleName", nativeQuery = true)
     List<BlogUser> getAdminDataFromDB(@Param("roleName") String roleName);
 }

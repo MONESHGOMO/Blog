@@ -23,7 +23,6 @@ public class AdminService {
     @Autowired
     private BlogRepository blogRepository;
 
-
     @Autowired
     private UserRepository userRepository;
 
@@ -57,7 +56,7 @@ public class AdminService {
         }
     }
 
-    @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = {IOException.class})
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = { IOException.class })
     public Blog getBlogFromDBUsingId(Long id) {
         try {
             Blog getBlog = blogRepository.getBlogFromDBUsingId(id);
@@ -92,20 +91,19 @@ public class AdminService {
         return false;
     }
 
-
     public List<BlogUser> getAdminData() {
 
         Role adminRole = Role.ADMIN;
         return userRepository.getAdminDataFromDB(adminRole.name());
-	}
+    }
 
     public boolean deleteAdminById(Long id) {
         try {
             if (userRepository.existsById(id)) {
                 userRepository.deleteById(id);
-                return true;  
+                return true;
             }
-            return false;  
+            return false;
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete admin", e);
         }

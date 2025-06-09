@@ -1,26 +1,21 @@
 package blog.com.Blog.Application.DTO;
 
-
 public class RegisterUser_DTO {
 
     private String username;
     private String email;
     private String password;
 
-
-
     public RegisterUser_DTO() {
     }
 
-    public RegisterUser_DTO( String username, String email, String password) {
+    public RegisterUser_DTO(String username, String email, String password) {
         this.username = username;
         this.email = email;
-        this.password=password;
+        this.password = password;
     }
 
     // Getters and Setters
-
-
 
     public String getUsername() {
         return username;
@@ -37,9 +32,6 @@ public class RegisterUser_DTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
-
-
 
     public String getPassword() {
         return password;

@@ -32,8 +32,8 @@ public class Blog {
     @Basic(fetch = FetchType.EAGER)
     private byte[] imageData;
 
-
-    public Blog() {}
+    public Blog() {
+    }
 
     public Blog(String title, String content, String category) {
         this.title = title;
@@ -51,27 +51,67 @@ public class Blog {
         this.createdAt = createdAt;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public String getContent() {
+        return content;
+    }
 
-    public String getImageName() { return imageName; }
-    public void setImageName(String imageName) { this.imageName = imageName; }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-    public String getImageType() { return imageType; }
-    public void setImageType(String imageType) { this.imageType = imageType; }
+    public String getCategory() {
+        return category;
+    }
 
-    public byte[] getImageData() { return imageData; }
-    public void setImageData(byte[] imageData) { this.imageData = imageData; }
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
+    public byte[] getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
+    }
 }

@@ -43,7 +43,6 @@ public class RegistrationService {
             Role assignedRole = assignRoleBasedOnUsername(registerUserDto.getUsername());
             blogUser.setRole(assignedRole);
 
-
             userRepository.save(blogUser);
             return true;
 

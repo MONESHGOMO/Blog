@@ -1,6 +1,5 @@
 package blog.com.Blog.Application.service.emailService;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ public class CustomMailSender {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-
-
     public void sendUserSignUpNotification(String to) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -46,18 +43,18 @@ public class CustomMailSender {
 
     private String buildEmailBody() {
         return """
-            Hi there,
+                Hi there,
 
-            Thank you for signing up at Gomo Blog! We’re thrilled to have you in our community.
+                Thank you for signing up at Gomo Blog! We’re thrilled to have you in our community.
 
-            You can now explore trending posts, share your ideas, and engage with other readers.
+                You can now explore trending posts, share your ideas, and engage with other readers.
 
-            👉 Start exploring: https://gomo-blog.com (SOON)
+                👉 Start exploring: https://gomo-blog.com (SOON)
 
-            If you didn’t sign up for this account, please disregard this email.
+                If you didn’t sign up for this account, please disregard this email.
 
-            Warm regards,
-            Gomo Blog Team
-            """;
+                Warm regards,
+                Gomo Blog Team
+                """;
     }
 }
