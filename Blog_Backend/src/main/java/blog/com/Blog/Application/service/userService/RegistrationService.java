@@ -4,7 +4,6 @@ import blog.com.Blog.Application.DTO.RegisterUser_DTO;
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.model.Role;
 import blog.com.Blog.Application.repository.UserRepository;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
@@ -35,35 +34,29 @@ public class RegistrationService {
         return userRepository.existsByEmail(email);
     }
 
-    public Boolean createUser(@Valid RegisterUser_DTO registerUserDto) {
-        try {
-            BlogUser blogUser = new BlogUser();
-            blogUser.setEmail(registerUserDto.getEmail());
-
-            Role assignedRole = assignRoleBasedOnUsername(registerUserDto.getUsername());
-            blogUser.setRole(assignedRole);
-
-            userRepository.save(blogUser);
-            return true;
-
-        } catch (Exception e) {
-            log.error("Exception occurred during user registration", e);
+    
+    public boolean createUser(RegisterUser_DTO registerUserDto) {
+        if (userRepository.existsByEmail(registerUserDto.getEmail())) {
             return false;
         }
+
+        BlogUser user = new BlogUser();
+        user.setUsername(registerUserDto.getUsername());
+        user.setEmail(registerUserDto.getEmail());
+        user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
+        user.setRole(determineRole(registerUserDto.getUsername()));
+        
+        userRepository.save(user);
+        return true;
     }
 
-    private Role assignRoleBasedOnUsername(String username) {
-        String userNameLower = username.toLowerCase();
-        log.info("Creating user: {}", userNameLower);
-
-        if (userNameLower.contains(adminSecretKey.toLowerCase())) {
-            log.info("Assigned role: ADMIN");
-            return Role.ADMIN;
-        } else {
-            log.info("Assigned role: USER");
-            return Role.USER;
-        }
+    private Role determineRole(String username) {
+        return username.toLowerCase().contains(adminSecretKey.toLowerCase()) 
+            ? Role.ADMIN 
+            : Role.USER;
     }
+
+
 
     public Optional<BlogUser> findByEmail(@NotBlank @Email String email) {
         return userRepository.findByEmail(email);

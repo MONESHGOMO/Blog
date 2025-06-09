@@ -1,5 +1,7 @@
 package blog.com.Blog.Application.service.security.JWT;
 
+
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +18,7 @@ public class JwtUtil {
     private String secret;
 
     @Value("${app.jwt.expiration}")
-    private long jwtExpirationInMs;
+    private long jwtExpirationInMs; 
 
     private Key getSigningKey() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
