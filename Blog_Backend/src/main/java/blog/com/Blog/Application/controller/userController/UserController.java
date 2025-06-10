@@ -66,15 +66,13 @@ public class UserController {
     }
 
     @GetMapping("/blogImage/{id}")
-    public ResponseEntity<byte[]> getBlogImageById(@PathVariable Long id) {
-
-        Optional<Blog> blog = blogsData.getAllBlogByIdFromDB(id);
-        byte[] imageFile = blog.get().getImageData();
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(blog.get().getImageType()))
-                .body(imageFile);
-
+    public ResponseEntity<String> getBlogImageById(@PathVariable Long id) {
+        Optional<Blog> blogOpt = blogsData.getAllBlogByIdFromDB(id);
+        if (blogOpt.isPresent()) {
+            return ResponseEntity.ok(blogOpt.get().getImageURL());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found");
+        }
     }
 
 }
