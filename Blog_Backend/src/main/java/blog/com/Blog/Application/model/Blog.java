@@ -2,6 +2,7 @@ package blog.com.Blog.Application.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+
 import java.util.Date;
 
 @Entity
@@ -23,33 +24,23 @@ public class Blog {
     private String category;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private Date createdAt = new Date(); 
 
-    private String imageName;
-    private String imageType;
-
-    @Lob
-    @Basic(fetch = FetchType.EAGER)
-    private byte[] imageData;
+    @NotBlank(message = "Image URL is required")
+    private String imageURL;
 
     public Blog() {
     }
 
-    public Blog(String title, String content, String category) {
+    public Blog(String title, String content, String category, String imageURL) {
         this.title = title;
         this.content = content;
         this.category = category;
+        this.imageURL = imageURL;
+        this.createdAt = new Date();
     }
 
-    public Blog(String imageName, String imageType, byte[] imageData) {
-        this.imageName = imageName;
-        this.imageType = imageType;
-        this.imageData = imageData;
-    }
-
-    public Blog(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+    // Getters & Setters
 
     public Long getId() {
         return id;
@@ -91,27 +82,11 @@ public class Blog {
         this.createdAt = createdAt;
     }
 
-    public String getImageName() {
-        return imageName;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public String getImageType() {
-        return imageType;
-    }
-
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
-    }
-
-    public byte[] getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

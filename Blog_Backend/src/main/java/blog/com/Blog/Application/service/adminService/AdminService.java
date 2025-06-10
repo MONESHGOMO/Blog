@@ -56,7 +56,6 @@ public class AdminService {
         }
     }
 
-    @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = { IOException.class })
     public Blog getBlogFromDBUsingId(Long id) {
         try {
             Blog getBlog = blogRepository.getBlogFromDBUsingId(id);
@@ -74,8 +73,6 @@ public class AdminService {
 
     public Blog saveBlog(Blog addBlogFromAdmin) {
         try {
-
-            System.out.println(addBlogFromAdmin.getImageData().toString());
             return blogRepository.save(addBlogFromAdmin);
         } catch (Exception e) {
             logger.error("Error while saving blog: {}", e.getMessage(), e);

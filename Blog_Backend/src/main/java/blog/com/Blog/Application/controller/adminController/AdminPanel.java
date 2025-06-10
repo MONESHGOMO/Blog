@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import blog.com.Blog.Application.model.Blog;
 import blog.com.Blog.Application.model.BlogUser;
@@ -85,62 +84,54 @@ public class AdminPanel {
     }
 
     @PostMapping("/addBlog") // http://localhost:8080/admin/addBlog
-    public ResponseEntity<String> addBlogToDB(@RequestPart Blog addBlogFromAdmin,
-            @RequestPart MultipartFile imageFile) {
-        logger.info("POST /addBlog called - Adding new blog with title '{}'", addBlogFromAdmin.getTitle());
-        try {
-            addBlogFromAdmin.setImageName(imageFile.getOriginalFilename());
-            addBlogFromAdmin.setImageType(imageFile.getContentType());
-            addBlogFromAdmin.setImageData(imageFile.getBytes());
-            addBlogFromAdmin.setCreatedAt(new Date());
+    public ResponseEntity<String> addBlogToDB(@RequestBody Blog addBlogFromAdmin) {
+    logger.info("POST /addBlog called - Adding new blog with title '{}'", addBlogFromAdmin.getTitle());
 
-            adminService.saveBlog(addBlogFromAdmin);
+    try {
+        addBlogFromAdmin.setCreatedAt(new Date());  // Ensure timestamp is set
 
-            logger.info("Blog '{}' added successfully", addBlogFromAdmin.getTitle());
-            return new ResponseEntity<>("Blog added successfully!", HttpStatus.CREATED);
-        } catch (Exception e) {
-            logger.error("Exception in addBlogToDB(): {}", e.getMessage(), e);
-            return new ResponseEntity<>("Failed to add blog", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        adminService.saveBlog(addBlogFromAdmin);
+
+        logger.info("Blog '{}' added successfully", addBlogFromAdmin.getTitle());
+        return new ResponseEntity<>("Blog added successfully!", HttpStatus.CREATED);
+
+    } catch (Exception e) {
+        logger.error("Exception in addBlogToDB(): {}", e.getMessage(), e);
+        return new ResponseEntity<>("Failed to add blog", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 
-    @PutMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
-    public ResponseEntity<String> updateBlogToDB(
-            @PathVariable Long id,
-            @RequestPart(value = "blogUpdateFromAdmin") Blog blogUpdateFromAdmin,
-            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
 
-        logger.info("PUT /blogs/{} called - Updating blog", id);
-        try {
-            Blog existingBlog = adminService.getBlogFromDBUsingId(id);
-            if (existingBlog == null) {
-                logger.warn("Blog with ID {} not found for update", id);
-                return new ResponseEntity<>("Blog not found", HttpStatus.NOT_FOUND);
-            }
+		@PutMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
+		public ResponseEntity<String> updateBlogToDB(
+		        @PathVariable Long id,
+		        @RequestBody Blog blogUpdateFromAdmin) {
+		
+		    logger.info("PUT /blogs/{} called - Updating blog", id);
+		    try {
+		        Blog existingBlog = adminService.getBlogFromDBUsingId(id);
+		        if (existingBlog == null) {
+		            logger.warn("Blog with ID {} not found for update", id);
+		            return new ResponseEntity<>("Blog not found", HttpStatus.NOT_FOUND);
+         }
 
-            existingBlog.setTitle(blogUpdateFromAdmin.getTitle());
-            existingBlog.setContent(blogUpdateFromAdmin.getContent());
-            existingBlog.setCategory(blogUpdateFromAdmin.getCategory());
-            existingBlog.setCreatedAt(new Date());
+        // Update fields
+        existingBlog.setTitle(blogUpdateFromAdmin.getTitle());
+        existingBlog.setContent(blogUpdateFromAdmin.getContent());
+        existingBlog.setCategory(blogUpdateFromAdmin.getCategory());
+        existingBlog.setImageURL(blogUpdateFromAdmin.getImageURL());
+        existingBlog.setCreatedAt(new Date()); // Optional: if you want to mark update time
 
-            if (imageFile != null && !imageFile.isEmpty()) {
-                logger.info("Updating image for blog ID {}", id);
-                existingBlog.setImageName(imageFile.getOriginalFilename());
-                existingBlog.setImageType(imageFile.getContentType());
-                existingBlog.setImageData(imageFile.getBytes());
-                existingBlog.setCreatedAt(new Date());
-            }
+        adminService.saveBlog(existingBlog);
 
-            adminService.saveBlog(existingBlog);
+        logger.info("Blog with ID {} updated successfully", id);
+        return new ResponseEntity<>("Blog updated successfully!", HttpStatus.OK);
 
-            logger.info("Blog with ID {} updated successfully", id);
-            return new ResponseEntity<>("Blog updated successfully!", HttpStatus.OK);
-
-        } catch (Exception e) {
-            logger.error("Exception in updateBlogToDB() for ID {}: {}", id, e.getMessage(), e);
-            return new ResponseEntity<>("Failed to update blog", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    } catch (Exception e) {
+        logger.error("Exception in updateBlogToDB() for ID {}: {}", id, e.getMessage(), e);
+        return new ResponseEntity<>("Failed to update blog", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 
     @DeleteMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
     public ResponseEntity<String> deleteBlog(@PathVariable Long id) {
