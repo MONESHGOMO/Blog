@@ -46,24 +46,28 @@ public class UserController {
         }
     }
 
-    @GetMapping("/blogs/{id}") // http://localhost:8080/user/blogs/{id}
-    public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
-        try {
-            logger.info("Fetching blog with ID: {}", id);
-            Optional<Blog> getBlogByID = blogsData.getAllBlogByIdFromDB(id);
-            if (getBlogByID.isPresent()) {
-                logger.info("Blog found with ID: {}", id);
-                return new ResponseEntity<>(getBlogByID, HttpStatus.OK);
-            } else {
-                logger.warn("No blog found with ID: {}", id);
-                return new ResponseEntity<>("No blog found with the given ID", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            logger.error("Error while fetching blog by ID {}: {}", id, e.getMessage(), e);
-            return new ResponseEntity<>("Something went wrong while fetching the blog.",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+   @GetMapping("/blogs/{id}")
+public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
+    try {
+        // Add startup delay detection
+        long startTime = System.currentTimeMillis();
+        
+        Optional<Blog> blog = blogsData.getAllBlogByIdFromDB(id);
+        long processingTime = System.currentTimeMillis() - startTime;
+
+        if (processingTime > 5000) { // If took more than 5 seconds
+            logger.warn("Slow response detected - possible cold start");
         }
+        
+        return blog.map(ResponseEntity::ok)
+                   .orElse(ResponseEntity.notFound().build());
+                   
+    } catch (Exception e) {
+        logger.error("Database unavailable: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+               .body("Server starting up, please retry in 30 seconds");
     }
+}
 
     @GetMapping("/blogImage/{id}")
     public ResponseEntity<String> getBlogImageById(@PathVariable Long id) {
