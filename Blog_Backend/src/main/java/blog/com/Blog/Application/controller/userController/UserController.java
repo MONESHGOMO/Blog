@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +19,7 @@ import blog.com.Blog.Application.service.userService.BlogsData;
 
 @RestController
 @CrossOrigin(origins = {
-        "http://localhost:5500",
         "http://127.0.0.1:5500",
-        "http://localhost:5501",
         "http://127.0.0.1:5501"
 })
 @RequestMapping("/users")
@@ -33,7 +30,7 @@ public class UserController {
    @Autowired
     private BlogsData blogsData;
 
-    @GetMapping("/blogs") // http://localhost:8080/user/blogs
+    @GetMapping("/blogs") // http://localhost:8080/users/blogs
     public ResponseEntity<?> getBlogs() {
         try {
             logger.info("Fetching all blogs for user...");
@@ -68,6 +65,7 @@ public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
                .body("Server starting up, please retry in 30 seconds");
     }
 }
+/*
 
     @GetMapping("/blogImage/{id}")
     public ResponseEntity<String> getBlogImageById(@PathVariable Long id) {
@@ -77,6 +75,13 @@ public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found");
         }
+    }
+ */
+
+    @GetMapping("/blogImage/{id}")
+    public ResponseEntity<String> getBlogImageById(@PathVariable Long id) {
+        Optional<Blog> blogOpt = blogsData.getAllBlogByIdFromDB(id);
+        return blogOpt.map(blog -> ResponseEntity.ok(blog.getImageURL())).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found"));
     }
 
 }
