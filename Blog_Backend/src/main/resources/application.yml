@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Blog-Application
+
+  profiles:
+    active: prod

@@ -8,20 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import blog.com.Blog.Application.model.Blog;
 import blog.com.Blog.Application.service.userService.BlogsData;
 
 @RestController
-@CrossOrigin(origins = {
-        "http://127.0.0.1:5500",
-        "http://127.0.0.1:5501"
-})
 @RequestMapping("/users")
 public class UserController {
 
@@ -30,20 +22,36 @@ public class UserController {
    @Autowired
     private BlogsData blogsData;
 
-    @GetMapping("/blogs") // http://localhost:8080/users/blogs
-    public ResponseEntity<?> getBlogs() {
+    @GetMapping("/blogs") // Example: http://localhost:8080/users/blogs?page=0&size=5
+    public ResponseEntity<?> getBlogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         try {
-            logger.info("Fetching all blogs for user...");
-            List<Blog> getAllBlogs = blogsData.getAllBlogsFromDB();
-            logger.info("Successfully fetched {} blogs.", getAllBlogs.size());
-            return new ResponseEntity<>(getAllBlogs, HttpStatus.OK);
+            logger.info("Fetching blogs - page: {}, size: {}", page, size);
+
+            List<Blog> allBlogs = blogsData.getAllBlogsFromDB();
+
+            int total = allBlogs.size();
+            int fromIndex = page * size;
+            int toIndex = Math.min(fromIndex + size, total);
+
+            if (fromIndex >= total) {
+                return new ResponseEntity<>("Page index out of range.", HttpStatus.BAD_REQUEST);
+            }
+
+            List<Blog> pagedBlogs = allBlogs.subList(fromIndex, toIndex);
+            logger.info("Successfully fetched {} blogs (paged).", pagedBlogs.size());
+
+            return new ResponseEntity<>(pagedBlogs, HttpStatus.OK);
+
         } catch (Exception e) {
             logger.error("Error while fetching blogs: {}", e.getMessage(), e);
             return new ResponseEntity<>("Something went wrong while fetching blogs.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-   @GetMapping("/blogs/{id}")
+
+    @GetMapping("/blogs/{id}")
 public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
     try {
         // Add startup delay detection
@@ -52,7 +60,7 @@ public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
         Optional<Blog> blog = blogsData.getAllBlogByIdFromDB(id);
         long processingTime = System.currentTimeMillis() - startTime;
 
-        if (processingTime > 5000) { // If took more than 5 seconds
+        if (processingTime > 5000) {
             logger.warn("Slow response detected - possible cold start");
         }
         
@@ -65,23 +73,9 @@ public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
                .body("Server starting up, please retry in 30 seconds");
     }
 }
-/*
 
-    @GetMapping("/blogImage/{id}")
-    public ResponseEntity<String> getBlogImageById(@PathVariable Long id) {
-        Optional<Blog> blogOpt = blogsData.getAllBlogByIdFromDB(id);
-        if (blogOpt.isPresent()) {
-            return ResponseEntity.ok(blogOpt.get().getImageURL());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found");
-        }
-    }
- */
 
-    @GetMapping("/blogImage/{id}")
-    public ResponseEntity<String> getBlogImageById(@PathVariable Long id) {
-        Optional<Blog> blogOpt = blogsData.getAllBlogByIdFromDB(id);
-        return blogOpt.map(blog -> ResponseEntity.ok(blog.getImageURL())).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blog not found"));
-    }
+
+
 
 }
