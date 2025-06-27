@@ -1,6 +1,6 @@
 # ---- Build Stage ----
-    FROM eclipse-temurin:23-jdk AS build
-
+    FROM eclipse-temurin:17-jdk AS build
+   
     # Install Maven
     ARG MAVEN_VERSION=3.9.6
     RUN apt-get update && apt-get install -y curl \
@@ -13,7 +13,7 @@
     RUN mvn clean package -DskipTests
     
     # ---- Runtime Stage ----
-    FROM eclipse-temurin:23-jre-alpine
+    FROM eclipse-temurin:17-jre-alpine
     WORKDIR /app
     COPY --from=build /app/target/*.jar app.jar
     
