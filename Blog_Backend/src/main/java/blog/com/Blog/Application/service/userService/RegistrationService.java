@@ -51,9 +51,14 @@ public class RegistrationService {
     }
 
     private Role determineRole(String username) {
-        return username.toLowerCase().contains(adminSecretKey.toLowerCase()) 
-            ? Role.ADMIN 
-            : Role.USER;
+        if (username == null || username.isEmpty()) {
+            return Role.USER;
+        }
+        if (username.toLowerCase().contains(adminSecretKey.toLowerCase())) {
+            return Role.ADMIN;
+        } else {
+            return Role.USER;
+        }
     }
 
 

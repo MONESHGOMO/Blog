@@ -31,7 +31,7 @@ public class CustomMailSender {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(to);
-            message.setSubject("Welcome to Gomo Blogs!");
+            message.setSubject("Welcome to Dev16 Blog!");
             message.setText(buildEmailBody());
 
             mailSender.send(message);
@@ -43,18 +43,21 @@ public class CustomMailSender {
 
     private String buildEmailBody() {
         return """
-                Hi there,
-
-                Thank you for signing up at Gomo Blog! We’re thrilled to have you in our community.
-
-                You can now explore trending posts, share your ideas, and engage with other readers.
-
-                👉 Start exploring: https://gomo-blog.com (SOON)
-
-                If you didn’t sign up for this account, please disregard this email.
-
-                Warm regards,
-                Gomo Blog Team
+                Dear User,
+                
+                Thank you for registering at dev16 Blog. We are excited to welcome you to our growing community of passionate readers and contributors.
+                
+                You can now browse trending posts, share your ideas, and connect with fellow enthusiasts.
+                
+                👉 Get started here: https://dev16-blog.web.app
+                
+                If you wish to contribute by sharing your own blog articles, please send your documents to: gomo.dev.16@gmail.com
+                
+                We look forward to your valuable contributions.
+                
+                Best regards,
+                Team Gomo Blogs
+                https://moneshgomo.netlify.app
                 """;
     }
 }

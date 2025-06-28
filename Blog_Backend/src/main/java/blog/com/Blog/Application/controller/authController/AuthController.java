@@ -25,12 +25,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "http://127.0.0.1:5500",
-        "http://localhost:5501",
-        "http://127.0.0.1:5501"
-})
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class.getName());
