@@ -115,12 +115,10 @@ public class AdminPanel {
 		            return new ResponseEntity<>("Blog not found", HttpStatus.NOT_FOUND);
          }
 
-        // Update fields
         existingBlog.setTitle(blogUpdateFromAdmin.getTitle());
         existingBlog.setContent(blogUpdateFromAdmin.getContent());
         existingBlog.setCategory(blogUpdateFromAdmin.getCategory());
         existingBlog.setImageURL(blogUpdateFromAdmin.getImageURL());
-        existingBlog.setCreatedAt(new Date()); // Optional: if you want to mark update time
 
         adminService.saveBlog(existingBlog);
 

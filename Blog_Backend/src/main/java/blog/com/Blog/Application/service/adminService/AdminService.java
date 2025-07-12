@@ -5,6 +5,7 @@ import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.model.Role;
 import blog.com.Blog.Application.repository.BlogRepository;
 import blog.com.Blog.Application.repository.UserRepository;
+import jakarta.persistence.Cacheable;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(Transactional.TxType.REQUIRED)
 public class AdminService {
 
     @Autowired
