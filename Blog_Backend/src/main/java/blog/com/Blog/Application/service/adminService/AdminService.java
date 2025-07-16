@@ -73,7 +73,26 @@ public class AdminService {
         }
     }
 
-    @CacheEvict(value = "allBlogs", allEntries = true)
+    // @CacheEvict(value = "allBlogs", allEntries = true)
+    // public Blog saveBlog(Blog addBlogFromAdmin) {
+    //     try {
+    //         return blogRepository.save(addBlogFromAdmin);
+    //     } catch (Exception e) {
+    //         logger.error("Error while saving blog: {}", e.getMessage(), e);
+    //         throw new RuntimeException("Error while saving blog", e);
+    //     }
+    // }
+
+    // @CacheEvict(value = "allBlogs", allEntries = true)
+    // public boolean deleteBlog(Long id) {
+    //     if (blogRepository.existsById(id)) {
+    //         blogRepository.deleteById(id);
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    @CacheEvict(value = { "allBlogs", "blogById" }, allEntries = true)
     public Blog saveBlog(Blog addBlogFromAdmin) {
         try {
             return blogRepository.save(addBlogFromAdmin);
@@ -83,7 +102,7 @@ public class AdminService {
         }
     }
 
-    @CacheEvict(value = "allBlogs", allEntries = true)
+    @CacheEvict(value = { "allBlogs", "blogById" }, allEntries = true)
     public boolean deleteBlog(Long id) {
         if (blogRepository.existsById(id)) {
             blogRepository.deleteById(id);
