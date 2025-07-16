@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -71,6 +72,7 @@ public class AdminService {
         }
     }
 
+    @CacheEvict(value = "allBlogs", allEntries = true)
     public Blog saveBlog(Blog addBlogFromAdmin) {
         try {
             return blogRepository.save(addBlogFromAdmin);
@@ -80,6 +82,7 @@ public class AdminService {
         }
     }
 
+    @CacheEvict(value = "allBlogs", allEntries = true)
     public boolean deleteBlog(Long id) {
         if (blogRepository.existsById(id)) {
             blogRepository.deleteById(id);
