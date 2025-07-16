@@ -2,7 +2,7 @@ package blog.com.Blog.Application.service.userService;
 
 import blog.com.Blog.Application.model.Blog;
 import blog.com.Blog.Application.repository.BlogRepository;
-//import jakarta.persistence.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,11 +5,12 @@ import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.model.Role;
 import blog.com.Blog.Application.repository.BlogRepository;
 import blog.com.Blog.Application.repository.UserRepository;
-import jakarta.persistence.Cacheable;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
