@@ -1,21 +1,20 @@
 package blog.com.Blog.Application.service.adminService;
 
-import blog.com.Blog.Application.model.Blog;
+import blog.com.Blog.Application.Exceptions.BlogNotFoundException;
+import blog.com.Blog.Application.model.Blogs;
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.model.Role;
 import blog.com.Blog.Application.repository.BlogRepository;
 import blog.com.Blog.Application.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,10 +29,9 @@ public class AdminService {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
-    public List<Blog> getAllBlogsFromDB() {
+    public List<Blogs> getAllBlogsFromDB() {
         try {
-            logger.info("Fetching all blogs from database...");
-            List<Blog> blogs = blogRepository.findAll();
+            List<Blogs> blogs = blogRepository.getAllBlogs();
             logger.info("Fetched {} blogs successfully.", blogs.size());
             return blogs;
         } catch (Exception e) {
@@ -42,25 +40,22 @@ public class AdminService {
         }
     }
 
-    public Optional<Blog> getBlogByIdFromDB(Long id) {
-        try {
+    public Optional<Blogs> getBlogByIdFromDB(Long id) {
+
             logger.info("Fetching blog with ID: {}", id);
-            Optional<Blog> blog = blogRepository.findById(id);
+            Optional<Blogs> blog = blogRepository.findById(id);
             if (blog.isPresent()) {
                 logger.info("Blog found with ID: {}", id);
             } else {
-                logger.warn("No blog found with ID: {}", id);
+                throw new BlogNotFoundException();
             }
             return blog;
-        } catch (Exception e) {
-            logger.error("Error while fetching blog with ID {}: {}", id, e.getMessage(), e);
-            return Optional.empty();
-        }
+
     }
 
-    public Blog getBlogFromDBUsingId(Long id) {
+    public Blogs getBlogFromDBUsingId(Long id) {
         try {
-            Blog getBlog = blogRepository.getBlogFromDBUsingId(id);
+            Blogs getBlog = blogRepository.getBlogFromDBUsingId(id);
             if (getBlog != null) {
                 return getBlog;
             } else {
@@ -73,36 +68,13 @@ public class AdminService {
         }
     }
 
-    // @CacheEvict(value = "allBlogs", allEntries = true)
-    // public Blog saveBlog(Blog addBlogFromAdmin) {
-    //     try {
-    //         return blogRepository.save(addBlogFromAdmin);
-    //     } catch (Exception e) {
-    //         logger.error("Error while saving blog: {}", e.getMessage(), e);
-    //         throw new RuntimeException("Error while saving blog", e);
-    //     }
-    // }
+    
 
-    // @CacheEvict(value = "allBlogs", allEntries = true)
-    // public boolean deleteBlog(Long id) {
-    //     if (blogRepository.existsById(id)) {
-    //         blogRepository.deleteById(id);
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-    @CacheEvict(value = { "allBlogs", "blogById" }, allEntries = true)
-    public Blog saveBlog(Blog addBlogFromAdmin) {
-        try {
+    public Blogs saveBlog(Blogs addBlogFromAdmin) {
+            addBlogFromAdmin.setCreatedAt(new Date());
             return blogRepository.save(addBlogFromAdmin);
-        } catch (Exception e) {
-            logger.error("Error while saving blog: {}", e.getMessage(), e);
-            throw new RuntimeException("Error while saving blog", e);
-        }
     }
 
-    @CacheEvict(value = { "allBlogs", "blogById" }, allEntries = true)
     public boolean deleteBlog(Long id) {
         if (blogRepository.existsById(id)) {
             blogRepository.deleteById(id);
@@ -112,7 +84,6 @@ public class AdminService {
     }
 
     public List<BlogUser> getAdminData() {
-
         Role adminRole = Role.ADMIN;
         return userRepository.getAdminDataFromDB(adminRole.name());
     }

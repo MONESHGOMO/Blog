@@ -17,7 +17,7 @@ public class CustomMailSender {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomMailSender.class);
 
-    @Autowired
+
     public CustomMailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }

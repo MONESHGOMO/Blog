@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/home","/auth/**","/users/**").permitAll();
+                    registry.requestMatchers("/home","/auth/**","/users/**","/connect/**").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.anyRequest().authenticated();
                 })

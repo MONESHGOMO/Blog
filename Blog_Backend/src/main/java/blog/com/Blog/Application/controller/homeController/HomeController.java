@@ -1,4 +1,4 @@
-package blog.com.Blog.Application.controller.HomeController;
+package blog.com.Blog.Application.controller.homeController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

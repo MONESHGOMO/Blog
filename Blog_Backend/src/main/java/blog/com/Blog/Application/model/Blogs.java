@@ -2,7 +2,6 @@ package blog.com.Blog.Application.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "blogs")
-public class Blog implements Serializable {
+public class Blogs implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -35,10 +34,10 @@ public class Blog implements Serializable {
     @NotBlank(message = "Image URL is required")
     private String imageURL;
 
-    public Blog() {
+    public Blogs() {
     }
 
-    public Blog(String title, String content, String category, String imageURL) {
+    public Blogs(String title, String content, String category, String imageURL) {
         this.title = title;
         this.content = content;
         this.category = category;
@@ -46,7 +45,6 @@ public class Blog implements Serializable {
         this.createdAt = new Date();
     }
 
-    // Getters & Setters
 
     public Long getId() {
         return id;

@@ -1,17 +1,17 @@
 package blog.com.Blog.Application.service.userService;
 
-import blog.com.Blog.Application.model.Blog;
+import blog.com.Blog.Application.Exceptions.BlogNotFoundException;
+import blog.com.Blog.Application.Exceptions.UnauthorizedAccessException;
+import blog.com.Blog.Application.model.Blogs;
 import blog.com.Blog.Application.repository.BlogRepository;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BlogsData {
@@ -21,34 +21,70 @@ public class BlogsData {
     @Autowired
     private BlogRepository blogRepository;
 
-    @Cacheable("allBlogs")
-    public List<Blog> getAllBlogsFromDB() {
-        try {
-            logger.info("Fetching all blogs from database...");
-            List<Blog> blogs = blogRepository.findAll();
-            logger.info("Fetched {} blogs successfully.", blogs.size());
-            return blogs;
-        } catch (Exception e) {
-            logger.error("Failed to fetch blogs from database: {}", e.getMessage(), e);
-            return Collections.emptyList();
+    private static final int DEFAULT_PAGE_SIZE = 5;
+
+    @Value("${auth.header}")
+    private String AUTH_HEADER;
+    public List<Blogs> getPagedBlogs(int page, String authHeader) {
+
+        if (!AUTH_HEADER.equals(authHeader)) {
+            throw new UnauthorizedAccessException();
         }
+
+        logger.info("Fetching page {} with default size {}", page, DEFAULT_PAGE_SIZE);
+        List<Blogs> allBlogs = blogRepository.findAll();
+
+        int total = allBlogs.size();
+        int fromIndex = page * DEFAULT_PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + DEFAULT_PAGE_SIZE, total);
+
+        if (fromIndex >= total) {
+            logger.warn("Page {} out of range (total blogs: {}).", page, total);
+            throw new BlogNotFoundException();
+        }
+
+        return new ArrayList<>(allBlogs.subList(fromIndex, toIndex));
     }
 
-    @Cacheable(value = "blogById", key = "#id")
-    public Optional<Blog> getAllBlogByIdFromDB(Long id) {
-        try {
-            logger.info("Fetching blog with ID: {}", id);
-            Optional<Blog> blog = blogRepository.findById(id);
-            if (blog.isPresent()) {
-                logger.info("Blog found with ID: {}", id);
-            } else {
-                logger.warn("No blog found with ID: {}", id);
-            }
-            return blog;
-        } catch (Exception e) {
-            logger.error("Error while fetching blog with ID {}: {}", id, e.getMessage(), e);
-            return Optional.empty();
+    public Blogs getAllBlogByIdFromDB(Long id, String authToken) {
+        logger.info("Fetching blog with ID: {}", id);
+
+        if (!authToken.equals(AUTH_HEADER)) {
+            throw new UnauthorizedAccessException();
         }
+
+        return blogRepository.findById(id)
+                .orElseThrow(BlogNotFoundException::new);
     }
 
+    public Integer getAllCountOfBlog(String authToken) {
+
+        if(authToken.equals(AUTH_HEADER)){
+            List<Blogs> allBlog = blogRepository.findAll();
+            return allBlog.size();
+        }
+        return 0;
+
+    }
+
+    public List<Blogs> getTheLatestBlog() {
+        return blogRepository.getLatestBlogNative();
+    }
+
+
+    public List<String> getCategory(String authToken) {
+        if (!AUTH_HEADER.equals(authToken)) {
+            throw new UnauthorizedAccessException();
+        }
+        List<String> allCategories = blogRepository.getListOfCategory();
+        Set<String> uniqueCategories = new HashSet<>(allCategories);
+        return new ArrayList<>(uniqueCategories);
+    }
+
+    public List<Blogs> getBlogByCategory(String category,String authToken) {
+        if (!AUTH_HEADER.equals(authToken)) {
+            throw new UnauthorizedAccessException();
+        }
+        return blogRepository.getBlogByCategory(category);
+    }
 }
