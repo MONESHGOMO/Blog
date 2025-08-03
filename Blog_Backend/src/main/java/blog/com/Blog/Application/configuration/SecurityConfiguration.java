@@ -75,7 +75,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-                "https://gomodevblogs.netlify.app", "https://dev16-blog.web.app/"));
+                "http://127.0.0.1:5500/","https://gomodevblogs.netlify.app", "https://dev16-blog.web.app/"));
 
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

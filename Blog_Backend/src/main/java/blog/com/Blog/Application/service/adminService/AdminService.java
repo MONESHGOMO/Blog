@@ -4,8 +4,7 @@ import blog.com.Blog.Application.Exceptions.BlogNotFoundException;
 import blog.com.Blog.Application.model.Blogs;
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.model.Role;
-import blog.com.Blog.Application.repository.BlogRepository;
-import blog.com.Blog.Application.repository.UserRepository;
+import blog.com.Blog.Application.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AdminService {
@@ -26,6 +22,18 @@ public class AdminService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ContactUsRepository contactUsRepository;
+
+    @Autowired
+    private SubscribersRepository subscribersRepository;
+
+    @Autowired
+    private LatestUpdatesRepository latestUpdatesRepository;
+
+
+
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
@@ -99,4 +107,24 @@ public class AdminService {
             throw new RuntimeException("Failed to delete admin", e);
         }
     }
+
+    public Map<String, Long> getAllCounts() {
+
+        Map<String, Long> getCounts = new LinkedHashMap<>();
+
+        Long blogCount = blogRepository.count();
+        Long contactUs = contactUsRepository.count();
+        Long latestUpdates = latestUpdatesRepository.count();
+        Long subscribers = subscribersRepository.count();
+        Long users = userRepository.count();
+
+        getCounts.put("Blog", blogCount);
+        getCounts.put("LatestUpdates", latestUpdates);
+        getCounts.put("Subscribers", subscribers);
+        getCounts.put("ContactUs", contactUs);
+        getCounts.put("Users", users);
+
+        return getCounts;
+    }
+
 }

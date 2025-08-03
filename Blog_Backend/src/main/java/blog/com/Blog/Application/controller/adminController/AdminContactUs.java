@@ -36,4 +36,13 @@ public class AdminContactUs {
         logger.info("Fetched {} subscribers", subscribers.size());
         return new ResponseEntity<>(subscribers, HttpStatus.OK);
     }
+
+    @DeleteMapping("/contact-us/{id}")
+    public ResponseEntity<String> deleteContactMessage(@PathVariable Long id) {
+        logger.info("Request to delete contact message with ID: {}", id);
+            contactUs.deleteMessage(id);
+            logger.info("Successfully deleted message with ID: {}", id);
+            return ResponseEntity.ok("Message deleted successfully");
+    }
 }
+

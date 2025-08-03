@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -49,6 +50,18 @@ public class AdminLatestUpdates {
         if (deleted) {
             logger.info("Latest update with ID {} deleted successfully", id);
             return ResponseEntity.ok("Deleted successfully.");
+        } else {
+            logger.warn("No latest update del  found with ID: {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No record found with ID: " + id);
+        }
+    }
+    @PatchMapping("/latestUpdates/{id}/status")
+    public ResponseEntity<String> updateLiveStatus(@PathVariable Long id, @RequestBody Map<String, Boolean> status) {
+        logger.info("Request received to update live status for ID: {} to {}", id, status.get("live"));
+        boolean updated = latestUpdatesService.updateLiveStatus(id, status.get("live"));
+        if (updated) {
+            logger.info("Live status updated successfully for ID: {}", id);
+            return ResponseEntity.ok("Status updated successfully.");
         } else {
             logger.warn("No latest update found with ID: {}", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No record found with ID: " + id);

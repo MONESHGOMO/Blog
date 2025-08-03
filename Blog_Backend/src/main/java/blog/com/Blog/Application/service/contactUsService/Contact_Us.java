@@ -73,4 +73,8 @@ public class Contact_Us {
     public List<EmailSubscribers> getAllSubscribers() {
         return subscribersRepository.findAll();
     }
+
+    public void deleteMessage(Long id) {
+        contactUsRepository.deleteById(id);
+    }
 }

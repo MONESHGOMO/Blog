@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LatestUpdatesService {
@@ -48,7 +46,7 @@ public class LatestUpdatesService {
             return Map.of("status", "error", "message", "No updates found");
         }
 
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
         response.put("id", latestUpdates.getId());
         response.put("contentOne", latestUpdates.getContentOne());
         response.put("contentTwo", latestUpdates.getContentTwo());
@@ -73,5 +71,17 @@ public class LatestUpdatesService {
         else{
             return false;
         }
+    }
+
+    @Transactional
+    public Boolean updateLiveStatus(Long id, Boolean isLive) {
+        Optional<LatestUpdates> updateOpt = latestUpdatesRepository.findById(id);
+        if (updateOpt.isPresent()) {
+            LatestUpdates update = updateOpt.get();
+            update.setLive(isLive);
+            latestUpdatesRepository.save(update);
+            return true;
+        }
+        return false;
     }
 }

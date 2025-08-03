@@ -27,4 +27,6 @@ public interface BlogRepository extends JpaRepository<Blogs, Long> {
 
     @Query(value = "SELECT * FROM blogs ORDER BY id DESC",nativeQuery = true)
     List<Blogs> getAllBlogs();
+
+
 }
