@@ -22,13 +22,11 @@ public class NewsLetterSubscribers {
 
     @PostMapping("/subscribe")
     public ResponseEntity<Map<String, Object>> addSubscribers(@RequestHeader("Authorization") String authHeader,@RequestBody SubscribeDto emailDto) {
-        logger.info("Received subscription request (sensitive details not logged)");
+        logger.info("Received subscription request");
         Map<String, Object> response = subscribers.addSubscriber(authHeader, emailDto);
         int statusCode = (int) response.get("code");
         if (statusCode == HttpStatus.CREATED.value()) {
             logger.info("Subscription successful");
-        } else if (statusCode == HttpStatus.CONFLICT.value()) {
-            logger.warn("Email already subscribed");
         }
         return ResponseEntity.status(statusCode).body(response);
     }

@@ -22,6 +22,8 @@ public class Subscribers {
     @Value("${auth.header}")
     private String AUTH_HEADER;
 
+    @Autowired
+    private CustomMailSender customMailSender;
     public Map<String, Object> addSubscriber(String authHeader, SubscribeDto emailDto) {
         Map<String, Object> response = new HashMap<>();
 
@@ -46,6 +48,7 @@ public class Subscribers {
             response.put("status", "success");
             response.put("message", "Subscription successful");
             response.put("code", HttpStatus.CREATED.value()); // 201
+            customMailSender.sendConfirmEmail(emailDto.getEmail());
         } catch (UnauthorizedAccessException e) {
             response.put("status", "error");
             response.put("message", "Unauthorized Access");
@@ -63,4 +66,6 @@ public class Subscribers {
     public Long existsByEmail(String email) {
         return subscribersRepository.countByEmail(email);
     }
+
+
 }
