@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RestController
@@ -21,7 +20,9 @@ public class NewsLetterSubscribers {
     private Subscribers subscribers;
 
     @PostMapping("/subscribe")
-    public ResponseEntity<Map<String, Object>> addSubscribers(@RequestHeader("Authorization") String authHeader,@RequestBody SubscribeDto emailDto) {
+    public ResponseEntity<Map<String, Object>> addSubscribers(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody SubscribeDto emailDto) {
         logger.info("Received subscription request");
         Map<String, Object> response = subscribers.addSubscriber(authHeader, emailDto);
         int statusCode = (int) response.get("code");

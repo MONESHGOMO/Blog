@@ -25,6 +25,7 @@ public class BlogsData {
 
     @Value("${auth.header}")
     private String AUTH_HEADER;
+
     public List<Blogs> getPagedBlogs(int page, String authHeader) {
 
         if (!AUTH_HEADER.equals(authHeader)) {

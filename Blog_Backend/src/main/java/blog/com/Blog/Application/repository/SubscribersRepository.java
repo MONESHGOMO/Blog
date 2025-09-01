@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface SubscribersRepository  extends JpaRepository<EmailSubscribers,Long> {
@@ -13,5 +15,8 @@ public interface SubscribersRepository  extends JpaRepository<EmailSubscribers,L
 
     @Query(value = "SELECT COUNT(*) FROM email_subscribers WHERE email = :email", nativeQuery = true)
     Long countByEmail(@Param("email") String email);
+
+    List<String> findAllEmailAddresses();
+    List<EmailSubscribers> findAll();
 
 }

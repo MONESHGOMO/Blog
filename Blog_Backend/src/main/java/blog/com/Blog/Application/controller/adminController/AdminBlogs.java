@@ -38,7 +38,6 @@ public class AdminBlogs {
     @GetMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
     public ResponseEntity<?> getBlogsById(@PathVariable Long id) {
         logger.info("GET /blogs/{} called - fetching blog by ID", id);
-
             Optional<Blogs> getBlogByID = adminService.getBlogByIdFromDB(id);
                 return new ResponseEntity<>(getBlogByID.get(), HttpStatus.OK);
     }
