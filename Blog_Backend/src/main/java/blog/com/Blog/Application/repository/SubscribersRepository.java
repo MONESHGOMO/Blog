@@ -8,15 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
-public interface SubscribersRepository  extends JpaRepository<EmailSubscribers,Long> {
-
+public interface SubscribersRepository extends JpaRepository<EmailSubscribers, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM email_subscribers WHERE email = :email", nativeQuery = true)
     Long countByEmail(@Param("email") String email);
 
-    List<String> findAllEmailAddresses();
+    @Query(value = "SELECT * FROM email_subscribers", nativeQuery = true)
     List<EmailSubscribers> findAll();
 
 }
