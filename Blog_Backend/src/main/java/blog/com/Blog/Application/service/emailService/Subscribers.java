@@ -24,11 +24,12 @@ public class Subscribers {
 
     @Autowired
     private CustomMailSender customMailSender;
+
     public Map<String, Object> addSubscriber(String authHeader, SubscribeDto emailDto) {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            if (!authHeader.equals(AUTH_HEADER)) {
+            if (authHeader == null || !authHeader.equals(AUTH_HEADER)) {
                 throw new UnauthorizedAccessException();
             }
 
@@ -66,6 +67,4 @@ public class Subscribers {
     public Long existsByEmail(String email) {
         return subscribersRepository.countByEmail(email);
     }
-
-
 }

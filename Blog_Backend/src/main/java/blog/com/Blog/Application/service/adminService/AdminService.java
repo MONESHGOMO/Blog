@@ -5,6 +5,7 @@ import blog.com.Blog.Application.model.Blogs;
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.model.Role;
 import blog.com.Blog.Application.repository.*;
+import blog.com.Blog.Application.service.emailService.CustomMailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class AdminService {
     @Autowired
     private LatestUpdatesRepository latestUpdatesRepository;
 
-
+    @Autowired
+    private CustomMailSender customMailSender;
 
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
@@ -80,6 +82,7 @@ public class AdminService {
 
     public Blogs saveBlog(Blogs addBlogFromAdmin) {
             addBlogFromAdmin.setCreatedAt(new Date());
+            customMailSender.pushMessageToAllSubscribers(addBlogFromAdmin.getCategory(), addBlogFromAdmin.getTitle(),addBlogFromAdmin.getImageURL());
             return blogRepository.save(addBlogFromAdmin);
     }
 
