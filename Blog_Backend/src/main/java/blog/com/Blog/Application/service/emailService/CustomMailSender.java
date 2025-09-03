@@ -68,18 +68,20 @@ public class CustomMailSender {
                 """;
     }
 
-    public void sendConfirmEmail(String email) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(fromEmail);
-            message.setTo(email);
-            message.setSubject("No reply email from dev16-blog");
-            message.setText(buildSubscribersMessage());
+    public void sendConfirmEmail(String email) throws MessagingException {
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            String subject = "No reply email from dev16-blog";
+            helper.setFrom(fromEmail);
+            helper.setTo(email);
+            helper.setSubject(subject);
+
+            String htmlContent = buildSubscribersMessage();
+            helper.setText(htmlContent,true);
             mailSender.send(message);
-            logger.info("Subscription confirmation sent to: {}", email);
-        } catch (Exception e) {
-            logger.error("Failed to send subscription confirmation to {}: {}", email, e.getMessage(), e);
-        }
+
     }
 
     private String buildSubscribersMessage() {
