@@ -78,13 +78,18 @@ public class AdminService {
         }
     }
 
-    
-
     public Blogs saveBlog(Blogs addBlogFromAdmin) {
-            addBlogFromAdmin.setCreatedAt(new Date());
-            customMailSender.pushMessageToAllSubscribers(addBlogFromAdmin.getCategory(), addBlogFromAdmin.getTitle(),addBlogFromAdmin.getImageURL());
-            return blogRepository.save(addBlogFromAdmin);
+        addBlogFromAdmin.setCreatedAt(new Date());
+
+        customMailSender.pushMessageToAllSubscribers(
+                addBlogFromAdmin.getCategory(),
+                addBlogFromAdmin.getTitle(),
+                addBlogFromAdmin.getImageURL()
+        );
+
+        return blogRepository.save(addBlogFromAdmin);
     }
+
 
     public boolean deleteBlog(Long id) {
         if (blogRepository.existsById(id)) {

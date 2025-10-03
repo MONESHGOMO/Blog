@@ -44,17 +44,18 @@ public class AdminBlogs {
 
 
 
-    @PostMapping("/addBlog") // http://localhost:8080/admin/addBlog
+    @PostMapping("/addBlog")
     public ResponseEntity<String> addBlogToDB(@RequestBody Blogs addBlogFromAdmin) {
-    logger.info("POST /addBlog called - Adding new blog with title '{}'", addBlogFromAdmin.getTitle());
+        logger.info("POST /addBlog called - Adding new blog with title '{}'", addBlogFromAdmin.getTitle());
         adminService.saveBlog(addBlogFromAdmin);
         logger.info("Blog '{}' added successfully", addBlogFromAdmin.getTitle());
         return new ResponseEntity<>("Blog added successfully!", HttpStatus.CREATED);
-}
+    }
 
 
 
-		@PutMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
+
+    @PutMapping("/blogs/{id}") // http://localhost:8080/admin/blogs/1
 		public ResponseEntity<String> updateBlogToDB(@PathVariable Long id,@RequestBody Blogs blogUpdateFromAdmin) {
 
 		    logger.info("PUT /blogs/{} called - Updating blog", id);

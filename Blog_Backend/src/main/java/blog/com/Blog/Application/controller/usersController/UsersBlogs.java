@@ -26,14 +26,24 @@ public class UsersBlogs {
     public ResponseEntity<?> getBlogs(@RequestParam(defaultValue = "0") int page,
                                       @RequestHeader("Authorization") String authHeader) {
         logger.info("Request to fetch paginated blogs - Page: {}", page);
-        List<Blogs> pagedBlogs = blogsData.getPagedBlogs(page, authHeader);
-        if (pagedBlogs == null) {
-            logger.warn("Access denied for paginated blogs request");
-            return new ResponseEntity<>("Forbidden: You don't have access", HttpStatus.FORBIDDEN);
+
+        try {
+            List<Blogs> pagedBlogs = blogsData.getPagedBlogs(page, authHeader);
+            if (pagedBlogs == null) {
+                logger.warn("Access denied for paginated blogs request, AuthHeader: {}", authHeader);
+                return new ResponseEntity<>("Forbidden: You don't have access", HttpStatus.FORBIDDEN);
+            }
+
+            logger.info("Successfully fetched {} blogs for page {}", pagedBlogs.size(), page);
+            logger.debug("Fetched blogs details: {}", pagedBlogs);
+            return new ResponseEntity<>(pagedBlogs, HttpStatus.OK);
+
+        } catch (Exception e) {
+            logger.error("Error fetching paginated blogs", e);
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        logger.info("Successfully fetched {} blogs for page {}", pagedBlogs.size(), page);
-        return new ResponseEntity<>(pagedBlogs, HttpStatus.OK);
     }
+
 
     @PostMapping("/blogs/{id}")
     public ResponseEntity<Blogs> getBlogById(@RequestHeader("Authorization") String authToken, @PathVariable Long id) {
@@ -51,7 +61,7 @@ public class UsersBlogs {
         return count;
     }
 
-    @GetMapping("/category")
+        @GetMapping("/category")
     public ResponseEntity<List<String>> getAllCategory(@RequestHeader("Authorization") String authToken) {
         logger.info("Request to fetch blog categories");
         List<String> getAllCategory = blogsData.getCategory(authToken);

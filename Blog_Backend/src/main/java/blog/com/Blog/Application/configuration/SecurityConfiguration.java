@@ -74,7 +74,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(
+        configuration.setAllowedOrigins(List.of("https://dev-env-16.web.app",
                 "https://gomodevblogs.netlify.app", "https://dev16-blog.web.app/"));
 
 
