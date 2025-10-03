@@ -26,5 +26,4 @@ public class Dashboard {
         return new ResponseEntity<>(adminService.getAllCounts(), HttpStatus.OK);
     }
 
-
 }
