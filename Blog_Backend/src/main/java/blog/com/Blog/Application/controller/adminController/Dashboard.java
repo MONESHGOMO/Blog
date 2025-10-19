@@ -20,7 +20,6 @@ public class Dashboard {
     @Autowired
     private AdminService adminService;
 
-
     @GetMapping("/dashboard")
     public ResponseEntity<Map<String,Long>> getAllCounts(){
         return new ResponseEntity<>(adminService.getAllCounts(), HttpStatus.OK);

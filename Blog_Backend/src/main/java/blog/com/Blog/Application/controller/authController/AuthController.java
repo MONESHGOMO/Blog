@@ -1,6 +1,5 @@
 package blog.com.Blog.Application.controller.authController;
 
-import blog.com.Blog.Application.service.emailService.CustomMailSender;
 import blog.com.Blog.Application.DTO.JwtResponse;
 import blog.com.Blog.Application.DTO.Login_DTO;
 import blog.com.Blog.Application.DTO.RegisterUser_DTO;
@@ -38,10 +37,7 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private CustomMailSender mailSender;
-    
-    
+
     @PostMapping("/register/user")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUser_DTO registerUserDto) {
         logger.info("Registration attempt for: {}", registerUserDto.getEmail());
@@ -57,7 +53,6 @@ public class AuthController {
         }
 
         logger.info("User registered: {}", registerUserDto.getEmail());
-        mailSender.sendUserSignUpNotification(registerUserDto.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

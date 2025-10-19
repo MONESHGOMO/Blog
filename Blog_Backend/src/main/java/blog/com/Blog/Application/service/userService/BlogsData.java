@@ -26,6 +26,9 @@ public class BlogsData {
     @Value("${auth.header}")
     private String AUTH_HEADER;
 
+
+
+
     public List<Blogs> getPagedBlogs(int page, String authHeader) {
 
         if (!AUTH_HEADER.equals(authHeader)) {
@@ -68,7 +71,10 @@ public class BlogsData {
 
     }
 
-    public List<Blogs> getTheLatestBlog() {
+    public List<Blogs> getTheLatestBlog(String authToken) {
+        if (!AUTH_HEADER.equals(authToken)) {
+            throw new UnauthorizedAccessException();
+        }
         return blogRepository.getLatestBlogNative();
     }
 
@@ -82,10 +88,11 @@ public class BlogsData {
         return new ArrayList<>(uniqueCategories);
     }
 
-    public List<Blogs> getBlogByCategory(String category,String authToken) {
+    public List<Blogs> getBlogByCategory(String category, String authToken) {
         if (!AUTH_HEADER.equals(authToken)) {
             throw new UnauthorizedAccessException();
         }
         return blogRepository.getBlogByCategory(category);
     }
+
 }

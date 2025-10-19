@@ -1,10 +1,8 @@
 package blog.com.Blog.Application.controller.usersController;
 
-import java.net.http.HttpResponse;
 import java.util.List;
 
 import blog.com.Blog.Application.model.Blogs;
-import jdk.jfr.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +20,22 @@ public class UsersBlogs {
     @Autowired
     private BlogsData blogsData;
 
-    @PostMapping("/blogs")
-    public ResponseEntity<?> getBlogs(@RequestParam(defaultValue = "0") int page,
-                                      @RequestHeader("Authorization") String authHeader) {
+    @GetMapping("/blogs")
+    public ResponseEntity<List<Blogs>> getBlogs(
+            @RequestParam(name = "page", defaultValue = "0") int page,String authToken) {
+
         logger.info("Request to fetch paginated blogs - Page: {}", page);
 
-        try {
-            List<Blogs> pagedBlogs = blogsData.getPagedBlogs(page, authHeader);
-            if (pagedBlogs == null) {
-                logger.warn("Access denied for paginated blogs request, AuthHeader: {}", authHeader);
-                return new ResponseEntity<>("Forbidden: You don't have access", HttpStatus.FORBIDDEN);
-            }
+        List<Blogs> pagedBlogs = blogsData.getPagedBlogs(page,authToken);
 
-            logger.info("Successfully fetched {} blogs for page {}", pagedBlogs.size(), page);
-            logger.debug("Fetched blogs details: {}", pagedBlogs);
-            return new ResponseEntity<>(pagedBlogs, HttpStatus.OK);
+        logger.info("Successfully fetched {} blogs for page {}", pagedBlogs.size(), page);
+        logger.debug("Fetched blogs details: {}", pagedBlogs);
 
-        } catch (Exception e) {
-            logger.error("Error fetching paginated blogs", e);
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(pagedBlogs);
     }
 
 
-    @PostMapping("/blogs/{id}")
+    @GetMapping("/blogs/{id}")
     public ResponseEntity<Blogs> getBlogById(@RequestHeader("Authorization") String authToken, @PathVariable Long id) {
         logger.info("Request to fetch blog by ID: {}", id);
         Blogs blog = blogsData.getAllBlogByIdFromDB(id, authToken);
@@ -53,7 +43,7 @@ public class UsersBlogs {
         return ResponseEntity.ok(blog);
     }
 
-    @PostMapping("/getBlogCount")
+    @GetMapping("/getBlogCount")
     public Integer getBlogCount(@RequestHeader("Authorization") String authToken) {
         logger.info("Request to fetch blog count");
         int count = blogsData.getAllCountOfBlog(authToken);
@@ -69,21 +59,20 @@ public class UsersBlogs {
         return new ResponseEntity<>(getAllCategory, HttpStatus.OK);
     }
 
-    @PostMapping("/getBlogByCategory")
+    @GetMapping("/getBlogByCategory/{categoryName}")
     public ResponseEntity<List<Blogs>> getBlogByCategory(
-            @RequestParam("categoryName") String category,
+            @PathVariable("categoryName") String category,
             @RequestHeader("Authorization") String authToken) {
 
         List<Blogs> getBlog = blogsData.getBlogByCategory(category, authToken);
-        return new ResponseEntity<>(getBlog, HttpStatus.OK);
+        return ResponseEntity.ok(getBlog);
     }
 
 
-
     @GetMapping("/getRecentBlog")
-    public ResponseEntity<List<Blogs>> getRecentBlogs() {
+    public ResponseEntity<List<Blogs>> getRecentBlogs(@RequestHeader("Authorization") String authToken) {
         logger.info("Request to fetch recent blogs");
-        List<Blogs> recentBlogs = blogsData.getTheLatestBlog();
+        List<Blogs> recentBlogs = blogsData.getTheLatestBlog(authToken);
         if (recentBlogs != null && !recentBlogs.isEmpty()) {
             logger.info("Fetched {} recent blogs", recentBlogs.size());
             return new ResponseEntity<>(recentBlogs, HttpStatus.OK);

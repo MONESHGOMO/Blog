@@ -22,9 +22,6 @@ public class LatestUpdatesService {
     private LatestUpdatesRepository latestUpdatesRepository;
 
 
-
-
-
     public boolean addLatestUpdate(LatestUpdatesDTO latestUpdatesDTO) {
 
         LatestUpdates addLatestUpdate = new LatestUpdates();

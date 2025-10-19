@@ -5,7 +5,6 @@ import blog.com.Blog.Application.model.Blogs;
 import blog.com.Blog.Application.model.BlogUser;
 import blog.com.Blog.Application.model.Role;
 import blog.com.Blog.Application.repository.*;
-import blog.com.Blog.Application.service.emailService.CustomMailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +23,11 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ContactUsRepository contactUsRepository;
-
-    @Autowired
-    private SubscribersRepository subscribersRepository;
 
     @Autowired
     private LatestUpdatesRepository latestUpdatesRepository;
 
-    @Autowired
-    private CustomMailSender customMailSender;
+
 
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
@@ -80,13 +73,6 @@ public class AdminService {
 
     public Blogs saveBlog(Blogs addBlogFromAdmin) {
         addBlogFromAdmin.setCreatedAt(new Date());
-
-        customMailSender.pushMessageToAllSubscribers(
-                addBlogFromAdmin.getCategory(),
-                addBlogFromAdmin.getTitle(),
-                addBlogFromAdmin.getImageURL()
-        );
-
         return blogRepository.save(addBlogFromAdmin);
     }
 
@@ -119,17 +105,12 @@ public class AdminService {
     public Map<String, Long> getAllCounts() {
 
         Map<String, Long> getCounts = new LinkedHashMap<>();
-
         Long blogCount = blogRepository.count();
-        Long contactUs = contactUsRepository.count();
         Long latestUpdates = latestUpdatesRepository.count();
-        Long subscribers = subscribersRepository.count();
         Long users = userRepository.count();
 
         getCounts.put("Blog", blogCount);
         getCounts.put("LatestUpdates", latestUpdates);
-        getCounts.put("Subscribers", subscribers);
-        getCounts.put("ContactUs", contactUs);
         getCounts.put("Users", users);
 
         return getCounts;
