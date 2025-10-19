@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/","/auth/**","/users/**","/connect/**").permitAll();
+                    registry.requestMatchers("/","/auth/**","/users/**").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.anyRequest().authenticated();
                 })
@@ -75,7 +75,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("https://dev-env-16.web.app",
-                "https://gomodevblogs.netlify.app", "https://dev16-blog.web.app/"));
+                "https://gomodevblogs.netlify.app", "https://dev16-blog.web.app/","http://127.0.0.1:5500/"));
 
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

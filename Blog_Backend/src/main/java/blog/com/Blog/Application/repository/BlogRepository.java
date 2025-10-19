@@ -25,6 +25,7 @@ public interface BlogRepository extends JpaRepository<Blogs, Long> {
     @Query(value = "SELECT * FROM blogs WHERE category = :category", nativeQuery = true)
     List<Blogs> getBlogByCategory(@Param("category") String category);
 
+
     @Query(value = "SELECT * FROM blogs ORDER BY id DESC",nativeQuery = true)
     List<Blogs> getAllBlogs();
 
